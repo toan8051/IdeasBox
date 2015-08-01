@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Ideas Box</string>
     <string name="action_settings">Settings</string>
-    <string name="noidung_hint">Ý tưởng hoặc phản ánh của Bạn</string>
+    <string name="noidung_hint">Ý tưởng của Bạn</string>
+    <string name="send_ideas">Send ideas</string>
 </resources>
