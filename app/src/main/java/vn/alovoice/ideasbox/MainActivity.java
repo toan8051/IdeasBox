@@ -34,6 +34,9 @@ public class MainActivity extends ActionBarActivity {
             case R.id.action_send:
                 startActivity(new Intent(this,IdeaActivity.class));
                 return true;
+            case R.id.action_refresh:
+                startService(new Intent(this, RefreshService.class)); ;
+                return true;
             default:
                 return false;
         }

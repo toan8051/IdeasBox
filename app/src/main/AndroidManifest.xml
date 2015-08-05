@@ -27,7 +27,7 @@
             android:name="vn.alovoice.ideasbox.SettingsActivity"
             android:label="@string/action_settings" >
         </activity>
-
+        <service android:name=".RefreshService" />
     </application>
 
 </manifest>
