@@ -28,6 +28,11 @@
             android:label="@string/action_settings" >
         </activity>
         <service android:name=".RefreshService" />
+        <provider
+            android:name="vn.alovoice.ideasbox.IdeaProvider"
+            android:authorities="vn.alovoice.ideasbox.IdeaProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

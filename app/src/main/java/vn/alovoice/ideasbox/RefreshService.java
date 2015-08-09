@@ -1,10 +1,12 @@
 package vn.alovoice.ideasbox;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -29,16 +31,38 @@ public class RefreshService extends IntentService {
         super.onCreate();
         Log.e(TAG, "onCreated");
     }
+
     // Executes on a worker thread
     @Override
-    protected void onHandleIntent(Intent intent) { //
+    protected void onHandleIntent(Intent intent) {
         Log.e(TAG, "onStarted");
         ArrayList<idea> mIdea = new ArrayList<idea>();
-        doGetIdeas(this,mIdea);
+        doGetIdeas(this, mIdea);
+        int count = 0;
 
+        DbHelper dbHelper = new DbHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        for (idea simpleIdea : mIdea) {
+            values.clear();
+            values.put(IdeaContract.Column.ID, simpleIdea.getId());
+            values.put(IdeaContract.Column.DIENTHOAI,
+                    simpleIdea.getDienThoai());
+            values.put(IdeaContract.Column.NOIDUNG,
+                    simpleIdea.getNoiDung());
+            values.put(IdeaContract.Column.NGAYTAO, simpleIdea.getNgayTao().getTime());
+            //db.insertWithOnConflict(IdeaContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+            Uri uri = getContentResolver().insert(IdeaContract.CONTENT_URI, values);
+            if (uri != null) {
+                count++;
+                Log.d(TAG, String.format("%s: %s", simpleIdea.getDienThoai(), simpleIdea.getNoiDung()));
+            }
+        }
+        return;
     }
+
     @Override
-    public void onDestroy() { //
+    public void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "onDestroyed");
     }
