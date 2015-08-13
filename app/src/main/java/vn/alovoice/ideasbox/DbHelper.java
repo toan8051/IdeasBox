@@ -19,7 +19,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = String
                 .format("create table %s (%s int primary key, %s text, %s text, %s int)",
-        IdeaContract.TABLE,
+                IdeaContract.TABLE,
                 IdeaContract.Column.ID,
                 IdeaContract.Column. DIENTHOAI,
                 IdeaContract.Column. NOIDUNG,

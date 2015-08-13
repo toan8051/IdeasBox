@@ -1,9 +1,11 @@
 package vn.alovoice.ideasbox;
 
 import android.app.IntentService;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
@@ -14,7 +16,10 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
 /**
@@ -55,9 +60,42 @@ public class RefreshService extends IntentService {
             Uri uri = getContentResolver().insert(IdeaContract.CONTENT_URI, values);
             if (uri != null) {
                 count++;
-                Log.d(TAG, String.format("%s: %s", simpleIdea.getDienThoai(), simpleIdea.getNoiDung()));
+                Log.e(TAG, String.format("%s : %s : %s", simpleIdea.getDienThoai(), simpleIdea.getNoiDung(),simpleIdea.getNgayTao()));
             }
+            //Log.e(TAG, String.format("%s: nok%s : ", simpleIdea.getDienThoai(), simpleIdea.getNoiDung()));
         }
+
+        //Truy van du lieu xem da luu vao SQLite thong qua provider duoc chua
+        String dictTextView="";
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(IdeaContract.CONTENT_URI, null, null, null, null);
+
+
+        try {
+            int noidungColumn = cursor.getColumnIndex(IdeaContract.Column.NOIDUNG);
+            int ngaytaoColumn = cursor.getColumnIndex(IdeaContract.Column.NGAYTAO);
+            int dienthoaiColumn = cursor.getColumnIndex(IdeaContract.Column.DIENTHOAI);
+            // Duy?t con tr? ?? l?y t?t c? các dòng
+            //cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                //L?y d? li?u c?a các c?t
+                int dienthoai = cursor.getInt(dienthoaiColumn);
+                String noidung = cursor.getString(noidungColumn);
+                String ngaytao = cursor.getString(ngaytaoColumn);
+                //??a vào bi?n dictTextView ?? hi?n th? lên màn hình.
+                dictTextView =  dictTextView + "\n dt: " + dienthoai + " - noidung: " + noidung + " - ngaytao: " + ngaytao;
+            }
+
+        } catch(Exception e){
+            Log.e(TAG, e.getMessage()+"that la");
+
+        } finally {
+            // ?óng Cursor
+            cursor.close();
+        }
+        Log.e(TAG, dictTextView);
+        //Log.e(TAG, "onStarted-end");
+
         return;
     }
 
@@ -114,11 +152,20 @@ public class RefreshService extends IntentService {
             for(int i=0;i<soapArray_data.size();i++){
                 SoapObject soapObject=(SoapObject)soapArray_data.get(i);
 
-                String mNoiDung=soapObject.getPropertyAsString("noidung");
-                Log.e(TAG, mNoiDung);
+                int mid =Integer.parseInt(soapObject.getPropertyAsString("id"));
+                String mNoiDung = soapObject.getPropertyAsString("noidung");
+                String mNgayTao = soapObject.getPropertyAsString("ngaytao");
+                String mDienThoai = soapObject.getPropertyAsString("dienthoai");
+
                 //??y vào array
                 //Luotgiao lg = new Luotgiao("ID_luotgiao", luotgiao, "nhanvientc", soluong_hd, sotien, "ngaygiao","ghichu");
-                //arrlg.add(lg);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                String dateInString = "07/06/2013";
+                Date date = formatter.parse(dateInString);
+
+                idea mIdea = new idea(mid, mNoiDung, date, mDienThoai);
+                arrIdea.add(mIdea);
+                //Log.e(TAG, mNoiDung);
             }
         } catch(Exception e){
             //Toast.makeText(ct, "L?i nè! " + e.getMessage(), Toast.LENGTH_LONG).show();

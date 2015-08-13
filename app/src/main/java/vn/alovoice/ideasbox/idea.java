@@ -16,7 +16,12 @@ public class idea {
     private String mGhiChu;
 
     public idea(){}
-
+    public idea(int id, String noidung, Date ngaytao, String dienthoai){
+        this.id = id;
+        this.mNoiDung = noidung;
+        this.mNgayTao = ngaytao;
+        this.mDienThoai = dienthoai;
+    }
 
     public int getId() {
         return id;

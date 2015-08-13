@@ -21,7 +21,7 @@ public class IdeaProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         dbHelper = new DbHelper(getContext());
-        Log.d(TAG, "onCreated");
+        Log.e(TAG, "onCreated");
         return true;
     }
 
@@ -48,19 +48,21 @@ public class IdeaProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri ret = null;
-        // Ki?m tra xem uri chính xác ch?a //
+        // kiem tra chinh xac chua//
         if (sURIMatcher.match(uri) != IdeaContract.IDEA_DIR) {
+            Log.e(TAG, "Illegal uri: " + uri);
             throw new IllegalArgumentException("Illegal uri: " + uri);
+
         }
         SQLiteDatabase db = dbHelper.getWritableDatabase(); //
         long rowId = db.insertWithOnConflict(IdeaContract.TABLE, null,
                 values, SQLiteDatabase.CONFLICT_IGNORE); //
-        // Thêm m?i thành công không?
+        // Them moi thanh cong khong?
         if (rowId != -1) { //
             long id = values.getAsLong(IdeaContract.Column.ID);
             ret = ContentUris.withAppendedId(uri, id); //
-            Log.d(TAG, "inserted uri: " + ret);
-        // C?p nh?t tr?ng thái d? li?u ?ã thay ??i trên URI này.
+            Log.e(TAG, "inserted uri: " + ret);
+        // Cap nhat trang thai du lieu da thay doi tren URI nay.
             getContext().getContentResolver().notifyChange(uri, null); //
         }
         return ret;
@@ -88,8 +90,8 @@ public class IdeaProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int ret = db.update(IdeaContract.TABLE, values, where, selectionArgs);
         if(ret>0) {
-            // C?p nh?t tr?ng thái d? li?u ?ã thay ??i trên URI này.
-            getContext().getContentResolver().notifyChange(uri, null);
+            // Cap nhat trang thai du lieu da thay doi tren URI nay.
+             getContext().getContentResolver().notifyChange(uri, null);
         }
         Log.d(TAG, "updated records: " + ret);
         return ret;
@@ -118,7 +120,7 @@ public class IdeaProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int ret = db.delete(IdeaContract.TABLE, where, selectionArgs);
         if(ret>0) {
-            // C?p nh?t tr?ng thái d? li?u ?ã thay ??i trên URI này.
+            // Cap nhat trang thai du lieu da thay doi tren URI nay.
             getContext().getContentResolver().notifyChange(uri, null);
         }
         Log.d(TAG, "deleted records: " + ret);
@@ -129,6 +131,7 @@ public class IdeaProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
+
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables( IdeaContract.TABLE );
         switch (sURIMatcher.match(uri)) {
@@ -145,11 +148,10 @@ public class IdeaProvider extends ContentProvider {
                 ? IdeaContract.DEFAULT_SORT
                 : sortOrder;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = qb.query(db, projection, selection, selectionArgs,
-                null, null, orderBy); //
-        // C?p nh?t tr?ng thái d? li?u ?ã thay ??i trên URI này.
+        Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, orderBy); //
+        // Cap nhat trang thai du lieu da thay doi tren URI nay.
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        Log.d(TAG, "queried records: "+cursor.getCount());
+        Log.e(TAG, "queried records: " + uri + cursor.getCount());
         return cursor;
     }
 

@@ -6,6 +6,8 @@ import android.provider.BaseColumns;
 /**
  * Created by VIENTHONG on 8/9/2015.
  */
+///data/data/vn.alovoice.ideasbox/databases/ideabox.db
+
 public class IdeaContract {
     // DB specific constants
     public static final String DB_NAME = "ideabox.db";
