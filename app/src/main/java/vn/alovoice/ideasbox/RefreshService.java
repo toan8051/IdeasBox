@@ -62,6 +62,12 @@ public class RefreshService extends IntentService {
                 count++;
                 Log.e(TAG, String.format("%s : %s : %s", simpleIdea.getDienThoai(), simpleIdea.getNoiDung(),simpleIdea.getNgayTao()));
             }
+
+            if (count > 0) {
+                sendBroadcast(new Intent(
+                        "com.marakana.android.yamba.action.NEW_STATUSES")
+                        .putExtra("count", count));
+            }
             //Log.e(TAG, String.format("%s: nok%s : ", simpleIdea.getDienThoai(), simpleIdea.getNoiDung()));
         }
 
