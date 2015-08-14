@@ -153,6 +153,8 @@ public class IdeaProvider extends ContentProvider {
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         Log.e(TAG, "queried records: " + uri + cursor.getCount());
         return cursor;
+
+        
     }
 
 }
