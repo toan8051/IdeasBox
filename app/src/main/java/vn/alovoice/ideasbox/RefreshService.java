@@ -96,7 +96,7 @@ public class RefreshService extends IntentService {
             Log.e(TAG, e.getMessage()+"that la");
 
         } finally {
-            // ?óng Cursor
+            // dong Cursor
             cursor.close();
         }
         Log.e(TAG, dictTextView);

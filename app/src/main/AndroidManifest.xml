@@ -41,6 +41,23 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="vn.alovoice.ideasbox.IdeaWidget"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name=
+                    "com.marakana.android.yamba.action.NEW_IDEAS" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name=
+                    "android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/idea_widget" />
+        </receiver>
+
+
     </application>
 
 </manifest>
