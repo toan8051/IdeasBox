@@ -154,7 +154,7 @@ public class IdeaProvider extends ContentProvider {
         Log.e(TAG, "queried records: " + uri + cursor.getCount());
         return cursor;
 
-        
+        //advance2
     }
 
 }
